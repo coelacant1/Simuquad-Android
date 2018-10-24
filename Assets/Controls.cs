@@ -19,5 +19,10 @@ namespace Assets
             this.Roll = Roll;
             this.Thrust = Thrust;
         }
+
+        public override string ToString()
+        {
+            return Yaw + ", " + Pitch + ", " + Roll + ", " + Thrust;
+        }
     }
 }

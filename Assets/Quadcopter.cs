@@ -8,7 +8,7 @@ namespace Assets
 {
     class Quadcopter
     {
-        private readonly VectorPID rotationControl = new VectorPID(0.1, 0, 0.06);
+        private readonly VectorPID rotationControl = new VectorPID(0.01, 0, 0.0045);
         private readonly double AirDensity = 1.225;
         private readonly double DragCoefficient = 1.0;
         private readonly double Area = 0.01;
@@ -21,16 +21,18 @@ namespace Assets
         private readonly double AAS = 10.0;//Acro Angle Scalar
         private readonly double HTS = 2.0;//Horizon Thrust Scalar
         private readonly double HAS = 10.0;//Horizon Angle Scalar
+        //private readonly Vector3 gravity = new Vector3(0.0f, -9.81f, 0.0f);
+        private readonly BetterVector gravity = new BetterVector(0.0, -9.81, 0.0);
 
         private double DT;
 
-        private MotorOutputs.Outputs motorOutputs = new MotorOutputs.Outputs(0, 0, 0, 0);
-        private Vector3 acceleration        = new Vector3(0, 0, 0);
-        private Vector3 velocity            = new Vector3(0, 0, 0);
-        private Vector3 position            = new Vector3(0, 0, 0);
-        private Vector3 angularAcceleration = new Vector3(0, 0, 0);
-        private Vector3 angularVelocity     = new Vector3(0, 0, 0);
-        private Quaternion angularPosition  = new Quaternion(0, 0, 0, 1);
+        private Outputs motorOutputs             = new Outputs(0, 0, 0, 0);
+        private BetterVector acceleration        = new BetterVector(0, 0, 0);
+        private BetterVector velocity            = new BetterVector(0, 0, 0);
+        private BetterVector position            = new BetterVector(0, 0, 0);
+        private BetterVector angularAcceleration = new BetterVector(0, 0, 0);
+        private BetterVector angularVelocity     = new BetterVector(0, 0, 0);
+        private BetterQuaternion angularPosition = new BetterQuaternion(1, 0, 0, 0);
 
         public Quadcopter(bool horizon)
         {
@@ -44,102 +46,89 @@ namespace Assets
             this.DT = DT;
 
             if (horizon)
+            {
                 motorOutputs = CalculateMotorOuputsHorizon(controls);
+            }
             else
+            {
                 motorOutputs = CalculateMotorOutputsAcrobatics(controls);
+            }
 
-
+            //Debug.Log(motorOutputs);
+            
             angularPosition = EstimateRotation();
             position = EstimatePosition();
         }
 
-        private Quaternion EstimateRotation()
+        private BetterQuaternion EstimateRotation()
         {
-            Vector3 dragForce = EstimateDrag(angularVelocity);
+            BetterVector dragForce = EstimateDrag(angularVelocity);
 
-            angularAcceleration.x = (float)(((motorOutputs.D + motorOutputs.E) - (motorOutputs.B + motorOutputs.C)) * torque * (Math.PI / 180.0));
-            angularAcceleration.y = (float)(((motorOutputs.B + motorOutputs.E) - (motorOutputs.C + motorOutputs.D)) * torque * (Math.PI / 180.0));
-            angularAcceleration.z = (float)(((motorOutputs.C + motorOutputs.E) - (motorOutputs.B + motorOutputs.D)) * torque * (Math.PI / 180.0));
-            
-            angularVelocity.x = (float)(angularVelocity.x + angularAcceleration.x * DT - dragForce.x * DT);
-            angularVelocity.y = (float)(angularVelocity.y + angularAcceleration.y * DT - dragForce.y * DT);
-            angularVelocity.z = (float)(angularVelocity.z + angularAcceleration.z * DT - dragForce.z * DT);
-
-            Quaternion angularRate = new Quaternion(
-                angularVelocity.x * 0.5f * (float)DT,
-                angularVelocity.y * 0.5f * (float)DT,
-                angularVelocity.z * 0.5f * (float)DT,
-                0.0f
-            ) * angularPosition;
-
-            angularPosition = new Quaternion(
-                angularPosition.x + angularRate.x,
-                angularPosition.y + angularRate.y,
-                angularPosition.z + angularRate.z,
-                angularPosition.w + angularRate.w
+            angularAcceleration = new BetterVector(
+                ((motorOutputs.D + motorOutputs.E) - (motorOutputs.B + motorOutputs.C)) * torque * (Math.PI / 180.0),
+                ((motorOutputs.B + motorOutputs.E) - (motorOutputs.C + motorOutputs.D)) * torque * (Math.PI / 180.0),
+                ((motorOutputs.C + motorOutputs.E) - (motorOutputs.B + motorOutputs.D)) * torque * (Math.PI / 180.0)
             );
 
-            angularPosition.Normalize();
+            //Debug.Log(angularAcceleration);
+            
+            angularVelocity += angularAcceleration * DT - dragForce * DT;
+
+            BetterQuaternion angularRate = new BetterQuaternion(
+                0.0,
+                angularVelocity.X * 0.5 * DT,
+                angularVelocity.Y * 0.5 * DT,
+                angularVelocity.Z * 0.5 * DT
+            ) * angularPosition;
+            
+            angularPosition = (angularPosition + angularRate).UnitQuaternion();
 
             return angularPosition;
         }
 
-        private Vector3 EstimatePosition()
+        private BetterVector EstimatePosition()
         {
-            float thrustSum = (float)(motorOutputs.B + motorOutputs.C + motorOutputs.D + motorOutputs.E);
-            Vector3 dragForce = EstimateDrag(velocity);
+            double thrustSum = motorOutputs.B + motorOutputs.C + motorOutputs.D + motorOutputs.E;
+            BetterVector dragForce = EstimateDrag(velocity);
 
-            acceleration = QuaternionMath.RotateVector3(angularPosition, new Vector3(0.0f, thrustSum, 0.0f));
-            velocity = new Vector3(
-                (float)(velocity.x + acceleration.x * (DT / Mass) - dragForce.x * DT),
-                (float)(velocity.y + acceleration.y * (DT / Mass) - dragForce.y * DT),
-                (float)(velocity.z + acceleration.z * (DT / Mass) - dragForce.z * DT)
-            );
+            acceleration = angularPosition.RotateVector(new BetterVector(0.0, thrustSum, 0.0));
 
-            position = new Vector3(
-                (float)(position.x + velocity.x * (DT / Mass)),
-                (float)(position.y + velocity.y * (DT / Mass)),
-                (float)(position.z + velocity.z * (DT / Mass))
-            );
+            velocity += acceleration * (DT / Mass) - dragForce * DT + gravity * DT;
+            position += velocity * (DT / Mass);
 
             return position;
         }
 
         public void ApplyCollision()
         {
-            acceleration = new Vector3(0, 0, 0);
-            velocity = new Vector3(-velocity.x, -velocity.y, -velocity.z);
+            acceleration = new BetterVector(0, 0, 0);
+            velocity = new BetterVector(-velocity.X, -velocity.Y, -velocity.Z);
         }
 
-        private MotorOutputs.Outputs CalculateMotorOuputsHorizon(Controls controls)
+        private Outputs CalculateMotorOuputsHorizon(Controls controls)
         {
-            Quaternion target = Quaternion.Euler((float)controls.Pitch, (float)controls.Yaw, (float)controls.Roll);
-            Quaternion change = new Quaternion(
-                2.0f * (target.x - angularPosition.x),
-                2.0f * (target.y - angularPosition.y),
-                2.0f * (target.z - angularPosition.z),
-                2.0f * (target.w - angularPosition.w)
-            );
-            Quaternion combine = change * target;
+            BetterQuaternion target = BetterQuaternion.EulerToQuaternion(new BetterEuler(new BetterVector(controls.Pitch, controls.Yaw, controls.Roll), EulerConstants.EulerOrderYXZS));
+            
+            BetterVector change = (2.0 * (target - angularPosition) * angularPosition.Conjugate() / DT).GetBiVector();
 
             //control rates
-            Vector3 cr = rotationControl.Calculate(
-                new Vector3(0.0f, 0.0f, 0.0f),
-                new Vector3((float)(combine.x / DT), (float)(combine.y / DT), (float)(combine.z / DT)),
-                (float)DT
+            BetterVector cr = rotationControl.Calculate(
+                new BetterVector(0.0, 0.0, 0.0),
+                change,
+                DT
             );
 
-            return new MotorOutputs.Outputs(
-                controls.Thrust * HTS + (-cr.x + cr.y - cr.z) * HAS,
-                controls.Thrust * HTS + (-cr.x - cr.y + cr.z) * HAS,
-                controls.Thrust * HTS + ( cr.x - cr.y - cr.z) * HAS,
-                controls.Thrust * HTS + ( cr.x + cr.y + cr.z) * HAS
+            return new Outputs(
+                controls.Thrust * HTS + (-cr.X + cr.Y - cr.Z) * HAS,
+                controls.Thrust * HTS + (-cr.X - cr.Y + cr.Z) * HAS,
+                controls.Thrust * HTS + ( cr.X - cr.Y - cr.Z) * HAS,
+                controls.Thrust * HTS + ( cr.X + cr.Y + cr.Z) * HAS
             );
         }
 
-        private MotorOutputs.Outputs CalculateMotorOutputsAcrobatics(Controls controls)
+        private Outputs CalculateMotorOutputsAcrobatics(Controls controls)
         {
-            return new MotorOutputs.Outputs(
+            return new Outputs(
                 controls.Thrust * ATS + (-controls.Pitch + controls.Yaw - controls.Roll) * AAS,
                 controls.Thrust * ATS + (-controls.Pitch - controls.Yaw + controls.Roll) * AAS,
                 controls.Thrust * ATS + ( controls.Pitch - controls.Yaw - controls.Roll) * AAS,
@@ -147,24 +136,48 @@ namespace Assets
             );
         }
 
-        private Vector3 EstimateDrag(Vector3 velocity)
+        private BetterVector EstimateDrag(BetterVector velocity)
         {
-            //Calculates drag force for each dimension
-            return new Vector3(
-                (float)(0.5 * AirDensity * Math.Pow(velocity.x, 2.0) * DragCoefficient * Area * Math.Sign(velocity.x)),
-                (float)(0.5 * AirDensity * Math.Pow(velocity.y, 2.0) * DragCoefficient * Area * Math.Sign(velocity.y)),
-                (float)(0.5 * AirDensity * Math.Pow(velocity.z, 2.0) * DragCoefficient * Area * Math.Sign(velocity.z))
+            return new BetterVector(
+                0.5 * AirDensity * Math.Pow(velocity.X, 2.0) * DragCoefficient * Area * Math.Sign(velocity.X),
+                0.5 * AirDensity * Math.Pow(velocity.Y, 2.0) * DragCoefficient * Area * Math.Sign(velocity.Y),
+                0.5 * AirDensity * Math.Pow(velocity.Z, 2.0) * DragCoefficient * Area * Math.Sign(velocity.Z)
             );
         }
 
-        public Quaternion GetQuaternion()
+        public BetterQuaternion GetQuaternion()
         {
             return angularPosition;
         }
 
-        public Vector3 GetPosition()
+        public Quaternion GetUnityQuaternion()
+        {
+            return new Quaternion(
+                (float)angularPosition.X,
+                (float)angularPosition.Y,
+                (float)angularPosition.Z,
+                (float)angularPosition.W
+            );
+        }
+
+        public BetterVector GetPosition()
         {
             return position;
         }
+
+        public Vector3 GetUnityPosition()
+        {
+            return new Vector3(
+                (float)position.X,
+                (float)position.Y,
+                (float)position.Z
+            );
+        }
+
+        public Outputs GetMotorOuputs()
+        {
+            return motorOutputs;
+        }
+
     }
 }

@@ -61,12 +61,22 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\BetterAxisAngle.cs" />
+    <Compile Include="Assets\BetterEuler.cs" />
+    <Compile Include="Assets\BetterQuaternion.cs" />
+    <Compile Include="Assets\BetterRotationMatrix.cs" />
+    <Compile Include="Assets\BetterVector.cs" />
     <Compile Include="Assets\CDS.cs" />
     <Compile Include="Assets\Controls.cs" />
+    <Compile Include="Assets\EulerConstants.cs" />
+    <Compile Include="Assets\EulerOrder.cs" />
+    <Compile Include="Assets\MathExtension.cs" />
     <Compile Include="Assets\MotorOutputs.cs" />
+    <Compile Include="Assets\Outputs.cs" />
     <Compile Include="Assets\PID.cs" />
     <Compile Include="Assets\Quadcopter.cs" />
-    <Compile Include="Assets\QuaternionMath.cs" />
+    <Compile Include="Assets\Slider2DLeft.cs" />
+    <Compile Include="Assets\Slider2DRight.cs" />
     <Compile Include="Assets\StateCalculation.cs" />
     <Compile Include="Assets\VectorPID.cs" />
     <Reference Include="UnityEditor.StandardEvents">

@@ -13,22 +13,6 @@ namespace Assets
         private readonly CDS cdsD = new CDS(100);
         private readonly CDS cdsE = new CDS(100);
 
-        public struct Outputs
-        {
-            public readonly double B;
-            public readonly double C;
-            public readonly double D;
-            public readonly double E;
-
-            public Outputs(double B, double C, double D, double E)
-            {
-                this.B = B;
-                this.C = C;
-                this.D = D;
-                this.E = E;
-            }
-        }
-
         public MotorOutputs(double B, double C, double D, double E)
         {
             SetMotorOutputs(B, C, D, E);

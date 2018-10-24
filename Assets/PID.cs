@@ -33,19 +33,7 @@ namespace Assets
 
         public double Calculate(double setPoint, double processVariable)
         {
-            double p, i, d, error, errorOffset;
-
-            error = setPoint - processVariable;
-            integral += error * DT;
-            errorOffset = (error - previousError) / DT;
-
-            p = KP * error;
-            i = KI * integral;
-            d = KD * errorOffset;
-
-            previousError = error;
-
-            return p + i + d;
+            return Calculate(setPoint, processVariable, DT);
         }
 
         public double Calculate(double setPoint, double processVariable, double dT)

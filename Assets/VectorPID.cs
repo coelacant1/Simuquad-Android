@@ -19,11 +19,11 @@ namespace Assets
             Z = new PID(KP, KI, KD);
         }
 
-        public VectorPID(Vector3 KP, Vector3 KI, Vector3 KD)
+        public VectorPID(BetterVector KP, BetterVector KI, BetterVector KD)
         {
-            X = new PID(KP.x, KI.x, KD.x);
-            Y = new PID(KP.y, KI.y, KD.y);
-            Z = new PID(KP.z, KI.z, KD.z);
+            X = new PID(KP.X, KI.X, KD.X);
+            Y = new PID(KP.Y, KI.Y, KD.Y);
+            Z = new PID(KP.Z, KI.Z, KD.Z);
         }
 
         public VectorPID(double KP, double KI, double KD, double DT)
@@ -33,28 +33,28 @@ namespace Assets
             Z = new PID(KP, KI, KD, DT);
         }
 
-        public VectorPID(Vector3 KP, Vector3 KI, Vector3 KD, Vector3 DT)
+        public VectorPID(BetterVector KP, BetterVector KI, BetterVector KD, BetterVector DT)
         {
-            X = new PID(KP.x, KI.x, KD.x, DT.x);
-            Y = new PID(KP.y, KI.y, KD.y, DT.y);
-            Z = new PID(KP.z, KI.z, KD.z, DT.z);
+            X = new PID(KP.X, KI.X, KD.X, DT.X);
+            Y = new PID(KP.Y, KI.Y, KD.Y, DT.Y);
+            Z = new PID(KP.Z, KI.Z, KD.Z, DT.Z);
         }
 
-        public Vector3 Calculate(Vector3 setPoint, Vector3 processVariable)
+        public BetterVector Calculate(BetterVector setPoint, BetterVector processVariable)
         {
-            return new Vector3(
-                (float)X.Calculate(setPoint.x, processVariable.x),
-                (float)Y.Calculate(setPoint.y, processVariable.y),
-                (float)Z.Calculate(setPoint.z, processVariable.z)
+            return new BetterVector(
+                X.Calculate(setPoint.X, processVariable.X),
+                Y.Calculate(setPoint.Y, processVariable.Y),
+                Z.Calculate(setPoint.Z, processVariable.Z)
             );
         }
 
-        public Vector3 Calculate(Vector3 setPoint, Vector3 processVariable, double DT)
+        public BetterVector Calculate(BetterVector setPoint, BetterVector processVariable, double DT)
         {
-            return new Vector3(
-                (float)X.Calculate(setPoint.x, processVariable.x, DT),
-                (float)Y.Calculate(setPoint.y, processVariable.y, DT),
-                (float)Z.Calculate(setPoint.z, processVariable.z, DT)
+            return new BetterVector(
+                X.Calculate(setPoint.X, processVariable.X, DT),
+                Y.Calculate(setPoint.Y, processVariable.Y, DT),
+                Z.Calculate(setPoint.Z, processVariable.Z, DT)
             );
         }
     }

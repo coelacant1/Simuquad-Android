@@ -26,33 +26,15 @@ namespace Assets
 
         public double Calculate(double setPoint)
         {
-            double cT;//current to target
-            double sF;//spring force
-            double dF;//damping force
-            double f;//cumulative force
-
-            cT = setPoint - position;
-            sF = cT * SC;
-            dF = velocity * -2.0 * Math.Sqrt(SC);
-            f = sF + dF;
-
-            velocity += f * DT;
-            position += velocity * DT;
-
-            return position;
+            return Calculate(setPoint, DT);
         }
 
         public double Calculate(double setPoint, double dT)
         {
-            double cT;//current to target
-            double sF;//spring force
-            double dF;//damping force
-            double f;//cumulative force
-
-            cT = setPoint - position;
-            sF = cT * SC;
-            dF = velocity * -2.0 * Math.Sqrt(SC);
-            f = sF + dF;
+            double cT = setPoint - position;
+            double sF = cT * SC;
+            double dF = velocity * -2.0 * Math.Sqrt(SC);
+            double f = sF + dF;
 
             velocity += f * dT;
             position += velocity * dT;
