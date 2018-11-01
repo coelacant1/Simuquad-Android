@@ -7,6 +7,9 @@ using Assets;
 public class StateCalculation : MonoBehaviour {
     private Quadcopter quadcopter;
     private Rigidbody rb;
+    public Joystick leftJoyStick;
+    public Joystick rightJoyStick;
+    private bool horizon = true;
 
     Controls controls = new Controls
     {
@@ -18,7 +21,7 @@ public class StateCalculation : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        quadcopter = new Quadcopter(true);
+        quadcopter = new Quadcopter(horizon);
 
         rb = GetComponent<Rigidbody>();
     }
@@ -26,14 +29,40 @@ public class StateCalculation : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-        controls.Pitch  = Slider2DRight.value.y;
-        controls.Yaw   += Slider2DLeft.value.x / 10;
-        controls.Roll   = Slider2DRight.value.x;
-        controls.Thrust = Slider2DLeft.value.y;
+        controls.Thrust = leftJoyStick.Vertical;
+        controls.Yaw    = horizon ? controls.Yaw + leftJoyStick.Horizontal  :  leftJoyStick.Horizontal  * 0.1;
+        controls.Pitch  = horizon ? rightJoyStick.Vertical   * -90          :  rightJoyStick.Vertical   * 0.1;
+        controls.Roll   = horizon ? rightJoyStick.Horizontal * -90          : -rightJoyStick.Horizontal * 0.1;
+
+        if (controls.Thrust <= 0)
+        {
+            controls.Thrust = 0;
+        }
+
+        //Debug.Log(controls.Pitch + " " + controls.Yaw + " " + controls.Roll + " " + controls.Thrust);
 
         quadcopter.EstimateState(controls, Time.deltaTime);//DT ~= 0.016s
         
         rb.MovePosition(quadcopter.GetUnityPosition());
         rb.MoveRotation(quadcopter.GetUnityQuaternion());
+    }
+
+    public void ResetQuadcopter()
+    {
+        quadcopter.Reset();
+    }
+
+    public void SetMode()
+    {
+        if (horizon)
+        {
+            horizon = false;
+        }
+        else
+        {
+            horizon = true;
+        }
+
+        quadcopter = new Quadcopter(horizon);
     }
 }

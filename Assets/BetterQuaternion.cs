@@ -165,7 +165,28 @@ namespace Assets
                 Z = axisAngle.Axis.Z * scale
             };
         }
-        
+
+        public static BetterQuaternion DirectionAngleToQuaternion(DirectionAngle directionAngle)
+        {
+            BetterVector right   = new BetterVector(1, 0, 0);
+            BetterVector up      = new BetterVector(0, 1, 0);
+            BetterVector forward = new BetterVector(0, 0, 1);
+
+            BetterVector rotatedRight;
+            BetterVector rotatedUp = new BetterVector(directionAngle.Direction);
+            BetterVector rotatedForward;
+
+            BetterQuaternion rotationChange = QuaternionFromTwoVectors(up, rotatedUp);
+
+            BetterVector rightAngleRotated = RotationMatrix.RotateVector(new BetterVector(0, -directionAngle.Rotation, 0), right);
+            BetterVector forwardAngleRotated = RotationMatrix.RotateVector(new BetterVector(0, -directionAngle.Rotation, 0), forward);
+
+            rotatedRight = rotationChange.RotateVector(rightAngleRotated);
+            rotatedForward = rotationChange.RotateVector(forwardAngleRotated);
+
+            return RotationMatrixToQuaternion(new RotationMatrix(rotatedRight, rotatedUp, rotatedForward));
+        }
+
         /// <summary>
         /// Converts from rotation matrix to quaternion value
         /// http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/
@@ -178,13 +199,13 @@ namespace Assets
         /// <param name="Y">Y Axis</param>
         /// <param name="Z">Z Axis</param>
         /// <returns>Returns a new quaternion</returns>
-        public static BetterQuaternion RotationMatrixToQuaternion(BetterRotationMatrix rM)
+        public static BetterQuaternion RotationMatrixToQuaternion(RotationMatrix rM)
         {
             BetterQuaternion q = new BetterQuaternion(1, 0, 0, 0);
 
-            BetterVector X = new BetterVector(rM[0, 0], rM[0, 1], rM[0, 2]);
-            BetterVector Y = new BetterVector(rM[1, 0], rM[1, 1], rM[1, 2]);
-            BetterVector Z = new BetterVector(rM[2, 0], rM[2, 1], rM[2, 2]);
+            BetterVector X = new BetterVector(rM.XAxis);
+            BetterVector Y = new BetterVector(rM.YAxis);
+            BetterVector Z = new BetterVector(rM.ZAxis);
 
             double matrixTrace = X.X + Y.Y + Z.Z;
             double square;

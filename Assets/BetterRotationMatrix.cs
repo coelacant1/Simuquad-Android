@@ -27,6 +27,15 @@ namespace Assets
             hierarchicalMatrixValues = hMatrix;
         }
 
+        public BetterRotationMatrix(BetterVector X, BetterVector Y, BetterVector Z)
+        {
+            BetterRotationMatrix hM = new BetterRotationMatrix();
+
+            hM[0, 0] = X.X; hM[0, 1] = Y.X; hM[0, 2] = Z.X;
+            hM[1, 0] = X.Y; hM[1, 1] = Y.Y; hM[1, 2] = Z.Y;
+            hM[2, 0] = X.Z; hM[2, 1] = Y.Z; hM[2, 2] = Z.Z;
+        }
+
         public double this[double index1, double index2]
         {
             get

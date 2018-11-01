@@ -8,7 +8,7 @@ namespace Assets
 {
     class Quadcopter
     {
-        private readonly VectorPID rotationControl = new VectorPID(0.01, 0, 0.0045);
+        private readonly VectorPID rotationControl = new VectorPID(0.01, 0, 0.006);
         private readonly double AirDensity = 1.225;
         private readonly double DragCoefficient = 1.0;
         private readonly double Area = 0.01;
@@ -74,6 +74,8 @@ namespace Assets
             
             angularVelocity += angularAcceleration * DT - dragForce * DT;
 
+            //Debug.Log(angularVelocity);
+
             BetterQuaternion angularRate = new BetterQuaternion(
                 0.0,
                 angularVelocity.X * 0.5 * DT,
@@ -107,7 +109,19 @@ namespace Assets
 
         private Outputs CalculateMotorOuputsHorizon(Controls controls)
         {
-            BetterQuaternion target = BetterQuaternion.EulerToQuaternion(new BetterEuler(new BetterVector(controls.Pitch, controls.Yaw, controls.Roll), EulerConstants.EulerOrderYXZS));
+            double x, y, z;
+
+            //normalizes x and z values and calculates the y component, magnitude = 1
+            x = -controls.Roll / 90.0;
+            z = -controls.Pitch  / 90.0;
+            
+            if (Math.Pow(x, 2.0) + Math.Pow(z, 2.0) >= 1)
+                y = 0;
+            else
+                y = Math.Sqrt(1.0 - Math.Pow(x, 2.0) - Math.Pow(z, 2.0));//1^2 = a^2 + b^2 + c^2 => a = (b^2 + c^2 + 1)^0.5
+
+            //calculates the target rotation, the yaw is actual yaw, the vector defines the target upvector of the quadcopter
+            BetterQuaternion target = BetterQuaternion.DirectionAngleToQuaternion(new DirectionAngle(controls.Yaw, RotationMatrix.RotateVector(new BetterVector(0, -controls.Yaw, 0), new BetterVector(x, y, z))));
             
             BetterVector change = (2.0 * (target - angularPosition) * angularPosition.Conjugate() / DT).GetBiVector();
 
@@ -117,7 +131,7 @@ namespace Assets
                 change,
                 DT
             );
-
+            
             return new Outputs(
                 controls.Thrust * HTS + (-cr.X + cr.Y - cr.Z) * HAS,
                 controls.Thrust * HTS + (-cr.X - cr.Y + cr.Z) * HAS,
@@ -179,5 +193,14 @@ namespace Assets
             return motorOutputs;
         }
 
+        public void Reset()
+        {
+            acceleration        = new BetterVector(0, 0, 0);
+            velocity            = new BetterVector(0, 0, 0);
+            position            = new BetterVector(0, 0, 0);
+            angularAcceleration = new BetterVector(0, 0, 0);
+            angularVelocity     = new BetterVector(0, 0, 0);
+            angularPosition     = new BetterQuaternion(1, 0, 0, 0);
+        }
     }
 }
