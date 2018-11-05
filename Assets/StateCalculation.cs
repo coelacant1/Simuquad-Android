@@ -30,7 +30,7 @@ public class StateCalculation : MonoBehaviour {
 	void Update () {
 
         controls.Thrust = leftJoyStick.Vertical;
-        controls.Yaw    = horizon ? controls.Yaw + leftJoyStick.Horizontal  :  leftJoyStick.Horizontal  * 0.1;
+        controls.Yaw    = horizon ? controls.Yaw + leftJoyStick.Horizontal * 4  :  leftJoyStick.Horizontal  * 0.1;
         controls.Pitch  = horizon ? rightJoyStick.Vertical   * -90          :  rightJoyStick.Vertical   * 0.1;
         controls.Roll   = horizon ? rightJoyStick.Horizontal * -90          : -rightJoyStick.Horizontal * 0.1;
 

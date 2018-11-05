@@ -114,7 +114,7 @@ namespace Assets
         /// <param name="alpha">Pitch</param>
         /// <param name="beta">Heading</param>
         /// <param name="gamma">Bank</param>
-        public void Rotate(BetterVector rotation)
+        public RotationMatrix Rotate(BetterVector rotation)
         {
             if (rotation.X != 0)
             {
@@ -143,6 +143,8 @@ namespace Assets
                 RotateZ(rotation.Z);
                 didRotate = true;
             }
+
+            return new RotationMatrix(XAxis, YAxis, ZAxis);
         }
 
         /// <summary>
@@ -154,9 +156,9 @@ namespace Assets
             double cos = Math.Cos(MathExtension.DegreesToRadians(theta));
             double sin = Math.Sin(MathExtension.DegreesToRadians(theta));
 
-            XAxis = new BetterVector(1, 0, 0).Multiply(XAxis);
-            YAxis = new BetterVector(0, cos, -sin).Multiply(YAxis);
-            ZAxis = new BetterVector(0, sin, cos).Multiply(ZAxis);
+            XAxis = new BetterVector(1, 0, 0).Add(XAxis);
+            YAxis = new BetterVector(0, cos, -sin).Add(YAxis);
+            ZAxis = new BetterVector(0, sin, cos).Add(ZAxis);
         }
 
         /// <summary>
@@ -168,9 +170,9 @@ namespace Assets
             double cos = Math.Cos(MathExtension.DegreesToRadians(theta));
             double sin = Math.Sin(MathExtension.DegreesToRadians(theta));
 
-            XAxis = new BetterVector(cos, 0, sin).Multiply(XAxis);
-            YAxis = new BetterVector(0, 1, 0).Multiply(YAxis);
-            ZAxis = new BetterVector(-sin, 0, cos).Multiply(ZAxis);
+            XAxis = new BetterVector(cos, 0, sin).Add(XAxis);
+            YAxis = new BetterVector(0, 1, 0).Add(YAxis);
+            ZAxis = new BetterVector(-sin, 0, cos).Add(ZAxis);
         }
 
         /// <summary>
@@ -182,9 +184,9 @@ namespace Assets
             double cos = Math.Cos(MathExtension.DegreesToRadians(theta));
             double sin = Math.Sin(MathExtension.DegreesToRadians(theta));
 
-            XAxis = new BetterVector(cos, -sin, 0).Multiply(XAxis);
-            YAxis = new BetterVector(sin, cos, 0).Multiply(YAxis);
-            ZAxis = new BetterVector(0, 0, 1).Multiply(ZAxis);
+            XAxis = new BetterVector(cos, -sin, 0).Add(XAxis);
+            YAxis = new BetterVector(sin, cos, 0).Add(YAxis);
+            ZAxis = new BetterVector(0, 0, 1).Add(ZAxis);
         }
 
         public void Multiply(double d)
@@ -248,7 +250,7 @@ namespace Assets
 
         public override string ToString()
         {
-            return String.Format("[{0}, {1}, {2}]\n[{3}, {4}, {5}]\n[{6}, {7}, {8}]",
+            return String.Format("[[{0}, {1}, {2}]\n[{3}, {4}, {5}]\n[{6}, {7}, {8}]]",
                 Math.Round(XAxis.X, 3), Math.Round(YAxis.X, 3), Math.Round(ZAxis.X, 3),
                 Math.Round(XAxis.Y, 3), Math.Round(YAxis.Y, 3), Math.Round(ZAxis.Y, 3),
                 Math.Round(XAxis.Z, 3), Math.Round(YAxis.Z, 3), Math.Round(ZAxis.Z, 3));

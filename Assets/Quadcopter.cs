@@ -121,7 +121,10 @@ namespace Assets
                 y = Math.Sqrt(1.0 - Math.Pow(x, 2.0) - Math.Pow(z, 2.0));//1^2 = a^2 + b^2 + c^2 => a = (b^2 + c^2 + 1)^0.5
 
             //calculates the target rotation, the yaw is actual yaw, the vector defines the target upvector of the quadcopter
-            BetterQuaternion target = BetterQuaternion.DirectionAngleToQuaternion(new DirectionAngle(controls.Yaw, RotationMatrix.RotateVector(new BetterVector(0, -controls.Yaw, 0), new BetterVector(x, y, z))));
+            BetterQuaternion target = BetterQuaternion.DirectionAngleToQuaternion(new DirectionAngle(0, new BetterVector(x, y, z)));
+            BetterQuaternion targetYaw = BetterQuaternion.EulerToQuaternion(new BetterEuler(new BetterVector(0, controls.Yaw, 0), EulerConstants.EulerOrderYZXS));
+
+            target = targetYaw * target;
             
             BetterVector change = (2.0 * (target - angularPosition) * angularPosition.Conjugate() / DT).GetBiVector();
 
