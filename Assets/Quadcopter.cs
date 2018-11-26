@@ -9,6 +9,7 @@ namespace Assets
     class Quadcopter
     {
         private readonly VectorPID rotationControl = new VectorPID(0.01, 0, 0.006);
+        private readonly VectorPID velocityControl = new VectorPID(0.1, 0, 0.0);
         private readonly double AirDensity = 1.225;
         private readonly double DragCoefficient = 1.0;
         private readonly double Area = 0.01;
@@ -145,11 +146,19 @@ namespace Assets
 
         private Outputs CalculateMotorOutputsAcrobatics(Controls controls)
         {
+            BetterVector output = velocityControl.Calculate(new BetterVector(controls.Pitch, controls.Yaw, controls.Roll), new BetterVector(angularVelocity.X, angularVelocity.Y, angularVelocity.Z));
+
+            BetterQuaternion targetYaw = BetterQuaternion.EulerToQuaternion(new BetterEuler(new BetterVector(0, controls.Yaw, 0), EulerConstants.EulerOrderYZXS));
+            BetterVector XZRotated = targetYaw.RotateVector(new BetterVector(output.X, 0 , output.Z));
+            //output = angularPosition.Conjugate().RotateVector(output);
+
+            output = new BetterVector(XZRotated.X, output.Y, XZRotated.Z);
+
             return new Outputs(
-                controls.Thrust * ATS + (-controls.Pitch + controls.Yaw - controls.Roll) * AAS,
-                controls.Thrust * ATS + (-controls.Pitch - controls.Yaw + controls.Roll) * AAS,
-                controls.Thrust * ATS + ( controls.Pitch - controls.Yaw - controls.Roll) * AAS,
-                controls.Thrust * ATS + ( controls.Pitch + controls.Yaw + controls.Roll) * AAS
+                controls.Thrust * ATS + (-output.X + output.Y - output.Z) * AAS,
+                controls.Thrust * ATS + (-output.X - output.Y + output.Z) * AAS,
+                controls.Thrust * ATS + ( output.X - output.Y - output.Z) * AAS,
+                controls.Thrust * ATS + ( output.X + output.Y + output.Z) * AAS
             );
         }
 
