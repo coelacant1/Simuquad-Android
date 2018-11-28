@@ -28,6 +28,14 @@ namespace Assets
             return value;
         }
 
+        public static double Exponential(double x, double maximum, double expo)
+        {
+            int tempSign = Math.Sign(x);
+            double tempScaled = Math.Abs(x) / maximum;
+
+            return Math.Pow(tempScaled, expo) * maximum * tempSign;
+        }
+
         /// <summary>
         /// 
         /// </summary>

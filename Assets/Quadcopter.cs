@@ -8,32 +8,34 @@ namespace Assets
 {
     class Quadcopter
     {
-        private readonly VectorPID rotationControl = new VectorPID(0.01, 0, 0.006);
-        private readonly VectorPID velocityControl = new VectorPID(0.1, 0, 0.0);
+        private readonly VectorPID rotationControl = new VectorPID(0.01, 0.005, 0.009, 1.0 / 60.0);
+        private readonly VectorPID velocityControl = new VectorPID(1.0,  0.0,   0.15,   1.0 / 60.0);
         private readonly double AirDensity = 1.225;
-        private readonly double DragCoefficient = 1.0;
-        private readonly double Area = 0.01;
+        private readonly double DragCoefficient = 0.2;
+        private readonly double Area = 0.1;
         private readonly double ArmLength = 100;//mm
         private readonly double ArmAngle = 60;//degrees
-        private readonly double Mass = 0.2;//Kg
+        private readonly double Mass = 0.5;//Kilograms
+        private readonly double MaxThrust = 10.0;//Thrust-to-weight ratio
         private readonly bool horizon;
         private readonly double torque;
-        private readonly double ATS = 10.0;//Acro Thrust Scalar
-        private readonly double AAS = 10.0;//Acro Angle Scalar
-        private readonly double HTS = 2.0;//Horizon Thrust Scalar
-        private readonly double HAS = 10.0;//Horizon Angle Scalar
-        //private readonly Vector3 gravity = new Vector3(0.0f, -9.81f, 0.0f);
         private readonly BetterVector gravity = new BetterVector(0.0, -9.81, 0.0);
 
-        private double DT;
+        private double DT = 1.0 / 60.0;
 
         private Outputs motorOutputs             = new Outputs(0, 0, 0, 0);
         private BetterVector acceleration        = new BetterVector(0, 0, 0);
+        private BetterVector oldAcceleration     = new BetterVector(0, 0, 0);
         private BetterVector velocity            = new BetterVector(0, 0, 0);
         private BetterVector position            = new BetterVector(0, 0, 0);
         private BetterVector angularAcceleration = new BetterVector(0, 0, 0);
         private BetterVector angularVelocity     = new BetterVector(0, 0, 0);
         private BetterQuaternion angularPosition = new BetterQuaternion(1, 0, 0, 0);
+
+        private readonly CDS motorBDelay = new CDS(500.0, 1.0 / 60.0);
+        private readonly CDS motorCDelay = new CDS(500.0, 1.0 / 60.0);
+        private readonly CDS motorDDelay = new CDS(500.0, 1.0 / 60.0);
+        private readonly CDS motorEDelay = new CDS(500.0, 1.0 / 60.0);
 
         public Quadcopter(bool horizon)
         {
@@ -46,6 +48,8 @@ namespace Assets
         {
             this.DT = DT;
 
+            controls.Thrust *= MaxThrust * Mass / 4.0;// Maximum thrust output per motor
+
             if (horizon)
             {
                 motorOutputs = CalculateMotorOuputsHorizon(controls);
@@ -55,7 +59,7 @@ namespace Assets
                 motorOutputs = CalculateMotorOutputsAcrobatics(controls);
             }
 
-            //Debug.Log(motorOutputs);
+            //Debug.Log(motorOutputs.B);
             
             angularPosition = EstimateRotation();
             position = EstimatePosition();
@@ -94,10 +98,21 @@ namespace Assets
             double thrustSum = motorOutputs.B + motorOutputs.C + motorOutputs.D + motorOutputs.E;
             BetterVector dragForce = EstimateDrag(velocity);
 
-            acceleration = angularPosition.RotateVector(new BetterVector(0.0, thrustSum, 0.0));
+            //T * 9.81 -> Mass thrust to mass in Newtons
+            acceleration = (angularPosition.RotateVector(new BetterVector(0.0, thrustSum * 9.81, 0.0)) - dragForce + gravity) / Mass;
 
-            velocity += acceleration * (DT / Mass) - dragForce * DT + gravity * DT;
-            position += velocity * (DT / Mass);
+            //Debug.Log(thrustSum);
+
+            //Verlet method
+            position += DT * (velocity + DT * oldAcceleration / 2.0);
+            velocity += DT * oldAcceleration;
+            velocity += DT * (acceleration - oldAcceleration) / 2.0;
+
+            velocity *= 0.999;
+
+            //Debug.Log(velocity);
+
+            oldAcceleration = acceleration;
 
             return position;
         }
@@ -135,30 +150,25 @@ namespace Assets
                 change,
                 DT
             );
-            
+
             return new Outputs(
-                controls.Thrust * HTS + (-cr.X + cr.Y - cr.Z) * HAS,
-                controls.Thrust * HTS + (-cr.X - cr.Y + cr.Z) * HAS,
-                controls.Thrust * HTS + ( cr.X - cr.Y - cr.Z) * HAS,
-                controls.Thrust * HTS + ( cr.X + cr.Y + cr.Z) * HAS
+                motorBDelay.Calculate(controls.Thrust + (-cr.X + cr.Y - cr.Z), DT),
+                motorCDelay.Calculate(controls.Thrust + (-cr.X - cr.Y + cr.Z), DT),
+                motorDDelay.Calculate(controls.Thrust + ( cr.X - cr.Y - cr.Z), DT),
+                motorEDelay.Calculate(controls.Thrust + ( cr.X + cr.Y + cr.Z), DT)
             );
         }
 
         private Outputs CalculateMotorOutputsAcrobatics(Controls controls)
         {
-            BetterVector output = velocityControl.Calculate(new BetterVector(controls.Pitch, controls.Yaw, controls.Roll), new BetterVector(angularVelocity.X, angularVelocity.Y, angularVelocity.Z));
-
-            BetterQuaternion targetYaw = BetterQuaternion.EulerToQuaternion(new BetterEuler(new BetterVector(0, controls.Yaw, 0), EulerConstants.EulerOrderYZXS));
-            BetterVector XZRotated = targetYaw.RotateVector(new BetterVector(output.X, 0 , output.Z));
-            //output = angularPosition.Conjugate().RotateVector(output);
-
-            output = new BetterVector(XZRotated.X, output.Y, XZRotated.Z);
-
+            BetterVector rotatedControls = angularPosition.RotateVector(new BetterVector(controls.Pitch, controls.Yaw, controls.Roll));
+            BetterVector output = velocityControl.Calculate(rotatedControls, new BetterVector(angularVelocity.X, angularVelocity.Y, angularVelocity.Z), DT);
+            
             return new Outputs(
-                controls.Thrust * ATS + (-output.X + output.Y - output.Z) * AAS,
-                controls.Thrust * ATS + (-output.X - output.Y + output.Z) * AAS,
-                controls.Thrust * ATS + ( output.X - output.Y - output.Z) * AAS,
-                controls.Thrust * ATS + ( output.X + output.Y + output.Z) * AAS
+                motorBDelay.Calculate(controls.Thrust + (-output.X + output.Y - output.Z), DT),
+                motorCDelay.Calculate(controls.Thrust + (-output.X - output.Y + output.Z), DT),
+                motorDDelay.Calculate(controls.Thrust + ( output.X - output.Y - output.Z), DT),
+                motorEDelay.Calculate(controls.Thrust + ( output.X + output.Y + output.Z), DT)
             );
         }
 

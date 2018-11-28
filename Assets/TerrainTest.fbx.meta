@@ -66,6 +66,17 @@ ModelImporter:
     4300016: Landscape_1
     4300018: Landscape_2
     4300020: Landscape_3
+    6400000: Building_2
+    6400002: Building_21
+    6400004: Building_23
+    6400006: Building_3
+    6400008: Building_45
+    6400010: Building_51
+    6400012: Building_53
+    6400014: Landscape
+    6400016: Landscape_1
+    6400018: Landscape_2
+    6400020: Landscape_3
     2186277476908879412: ImportLogs
   externalObjects: {}
   materials:
@@ -100,7 +111,7 @@ ModelImporter:
     lODScreenPercentages: []
     globalScale: 1
     meshCompression: 0
-    addColliders: 0
+    addColliders: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1

@@ -29,10 +29,10 @@ public class StateCalculation : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-        controls.Thrust = leftJoyStick.Vertical;
-        controls.Yaw    = horizon ? controls.Yaw + leftJoyStick.Horizontal * 4.0  :  leftJoyStick.Horizontal  * 10.0;
-        controls.Pitch  = horizon ? rightJoyStick.Vertical   * -90.0          :  rightJoyStick.Vertical   * 10.0;
-        controls.Roll   = horizon ? rightJoyStick.Horizontal * -90.0          : -rightJoyStick.Horizontal * 10.0;
+        controls.Thrust = MathExtension.Exponential(leftJoyStick.Vertical, 1.0, 2.0) * 1.0;
+        controls.Yaw    = horizon ? controls.Yaw + MathExtension.Exponential(leftJoyStick.Horizontal, 1.0, 3.0) * 4.0 : MathExtension.Exponential(leftJoyStick.Horizontal, 1.0, 3.0)   * 5.0;
+        controls.Pitch  = horizon ? MathExtension.Exponential(rightJoyStick.Vertical, 1.0, 2.0)   * -45.0             : MathExtension.Exponential(rightJoyStick.Vertical, 1.0, 2.0)    * 5.0;
+        controls.Roll   = horizon ? MathExtension.Exponential(rightJoyStick.Horizontal, 1.0, 2.0) * -45.0             : MathExtension.Exponential(-rightJoyStick.Horizontal, 1.0, 2.0) * 5.0;
 
         if (controls.Thrust <= 0)
         {
@@ -56,10 +56,12 @@ public class StateCalculation : MonoBehaviour {
     {
         if (horizon)
         {
+            //Camera.main.transform.rotation.eulerAngles.Set(-45, 0, 0);
             horizon = false;
         }
         else
         {
+            //Camera.main.transform.rotation.eulerAngles.Set(0, 0, 0);
             horizon = true;
         }
 
