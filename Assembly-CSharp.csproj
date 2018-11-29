@@ -88,6 +88,9 @@
     <Compile Include="Assets\Virtual Joystick Pack\Scripts\Joysticks\LeftFixedJoystick.cs" />
     <Compile Include="Assets\Virtual Joystick Pack\Scripts\Joysticks\RightFixedJoystick.cs" />
     <Compile Include="Assets\Virtual Joystick Pack\Scripts\Joysticks\VariableJoystick.cs" />
+    <None Include="Assets\Minimalist Free v2.3\Shaders\Minimalist Free Sky.shader" />
+    <None Include="Assets\Minimalist Free v2.3\Shaders\Minimalist Free Standard LWRP.shader" />
+    <None Include="Assets\Minimalist Free v2.3\Shaders\Minimalist Free Standard.shader" />
     <Reference Include="UnityEditor.StandardEvents">
       <HintPath>C:/Users/Rollie/Documents/GitHub/Simuquad-Android/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
     </Reference>

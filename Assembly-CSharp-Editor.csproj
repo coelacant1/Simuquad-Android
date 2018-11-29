@@ -23,7 +23,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>Temp\bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_2017_1_OR_NEWER;UNITY_2017_2_OR_NEWER;UNITY_2017_3_OR_NEWER;UNITY_2017_4_OR_NEWER;UNITY_2018_1_OR_NEWER;UNITY_2018_2_OR_NEWER;UNITY_2018_2_17;UNITY_2018_2;UNITY_2018;UNITY_ANALYTICS;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_SPRITES;ENABLE_GRID;ENABLE_TILEMAP;ENABLE_TERRAIN;ENABLE_TEXTURE_STREAMING;ENABLE_DIRECTOR;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_COLLAB_SOFTLOCKS;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_USE_WEBREQUEST;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_HUB;ENABLE_EDITOR_HUB_LICENSE;ENABLE_WEBSOCKET_CLIENT;ENABLE_DIRECTOR_AUDIO;ENABLE_DIRECTOR_TEXTURE;ENABLE_TIMELINE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;ENABLE_MANAGED_JOBS;ENABLE_MANAGED_TRANSFORM_JOBS;ENABLE_MANAGED_ANIMATION_JOBS;INCLUDE_DYNAMIC_GI;INCLUDE_GI;ENABLE_MONO_BDWGC;PLATFORM_SUPPORTS_MONO;INCLUDE_PUBNUB;ENABLE_VIDEO;ENABLE_PACKMAN;ENABLE_CUSTOM_RENDER_TEXTURE;ENABLE_LOCALIZATION;PLATFORM_ANDROID;UNITY_ANDROID;UNITY_ANDROID_API;ENABLE_SUBSTANCE;ENABLE_EGL;ENABLE_NETWORK;ENABLE_RUNTIME_GI;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_UNITYWEBREQUEST;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_EVENT_QUEUE;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_CLOUD_SERVICES_NATIVE_CRASH_REPORTING;PLATFORM_SUPPORTS_ADS_ID;UNITY_CAN_SHOW_SPLASH_SCREEN;ENABLE_VR;ENABLE_AR;ENABLE_SPATIALTRACKING;ENABLE_UNITYADS_RUNTIME;UNITY_UNITYADS_API;ENABLE_MONO;NET_2_0_SUBSET;ENABLE_PROFILER;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_UNITY_COLLECTIONS_CHECKS;ENABLE_BURST_AOT;UNITY_TEAM_LICENSE;ENABLE_VSTU;UNITY_POST_PROCESSING_STACK_V2;VEGETATION_STUDIO;TOUCH_REACT;UNITY_HAS_GOOGLEVR;UNITY_HAS_TANGO</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_2017_1_OR_NEWER;UNITY_2017_2_OR_NEWER;UNITY_2017_3_OR_NEWER;UNITY_2017_4_OR_NEWER;UNITY_2018_1_OR_NEWER;UNITY_2018_2_OR_NEWER;UNITY_2018_2_17;UNITY_2018_2;UNITY_2018;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_SPRITES;ENABLE_GRID;ENABLE_TILEMAP;ENABLE_TERRAIN;ENABLE_TEXTURE_STREAMING;ENABLE_DIRECTOR;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_COLLAB_SOFTLOCKS;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_USE_WEBREQUEST;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_HUB;ENABLE_EDITOR_HUB_LICENSE;ENABLE_WEBSOCKET_CLIENT;ENABLE_DIRECTOR_AUDIO;ENABLE_DIRECTOR_TEXTURE;ENABLE_TIMELINE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;ENABLE_MANAGED_JOBS;ENABLE_MANAGED_TRANSFORM_JOBS;ENABLE_MANAGED_ANIMATION_JOBS;INCLUDE_DYNAMIC_GI;INCLUDE_GI;ENABLE_MONO_BDWGC;PLATFORM_SUPPORTS_MONO;INCLUDE_PUBNUB;ENABLE_VIDEO;ENABLE_PACKMAN;ENABLE_CUSTOM_RENDER_TEXTURE;ENABLE_LOCALIZATION;PLATFORM_ANDROID;UNITY_ANDROID;UNITY_ANDROID_API;ENABLE_SUBSTANCE;ENABLE_EGL;ENABLE_NETWORK;ENABLE_RUNTIME_GI;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_UNITYWEBREQUEST;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_EVENT_QUEUE;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_CLOUD_SERVICES_NATIVE_CRASH_REPORTING;PLATFORM_SUPPORTS_ADS_ID;UNITY_CAN_SHOW_SPLASH_SCREEN;ENABLE_VR;ENABLE_AR;ENABLE_SPATIALTRACKING;ENABLE_UNITYADS_RUNTIME;UNITY_UNITYADS_API;ENABLE_MONO;NET_2_0_SUBSET;ENABLE_PROFILER;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_UNITY_COLLECTIONS_CHECKS;ENABLE_BURST_AOT;UNITY_TEAM_LICENSE;ENABLE_VSTU;UNITY_POST_PROCESSING_STACK_V2;VEGETATION_STUDIO;TOUCH_REACT;UNITY_HAS_GOOGLEVR;UNITY_HAS_TANGO</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169</NoWarn>
@@ -61,62 +61,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\AwesomeTechnologies\TouchReactSystem\Editor\AmplifyNodes\TouchReactNode.cs" />
-    <Compile Include="Assets\AwesomeTechnologies\TouchReactSystem\Editor\CompilerDefineTouchReact.cs" />
-    <Compile Include="Assets\AwesomeTechnologies\TouchReactSystem\Editor\TouchReactBaseEditor.cs" />
-    <Compile Include="Assets\AwesomeTechnologies\TouchReactSystem\Editor\TouchReactColliderEditor.cs" />
-    <Compile Include="Assets\AwesomeTechnologies\TouchReactSystem\Editor\TouchReactMeshEditor.cs" />
-    <Compile Include="Assets\AwesomeTechnologies\TouchReactSystem\Editor\TouchReactSystemEditor.cs" />
-    <Compile Include="Assets\AwesomeTechnologies\VegetationStudio\BillboardSystem\Editor\BakedBillboardControllerEditor.cs" />
-    <Compile Include="Assets\AwesomeTechnologies\VegetationStudio\BillboardSystem\Editor\BillboardSystemEditor.cs" />
-    <Compile Include="Assets\AwesomeTechnologies\VegetationStudio\ColliderSystem\Editor\ColliderSystemEditor.cs" />
-    <Compile Include="Assets\AwesomeTechnologies\VegetationStudio\Common\Editor\AssetPreviewCache.cs" />
-    <Compile Include="Assets\AwesomeTechnologies\VegetationStudio\Common\Editor\CompilerDefine.cs" />
-    <Compile Include="Assets\AwesomeTechnologies\VegetationStudio\Common\Editor\DocumentationEditorWindow.cs" />
-    <Compile Include="Assets\AwesomeTechnologies\VegetationStudio\Common\Editor\EditorFunctions.cs" />
-    <Compile Include="Assets\AwesomeTechnologies\VegetationStudio\Common\Editor\ExtendedTerrainEditor.cs" />
-    <Compile Include="Assets\AwesomeTechnologies\VegetationStudio\Common\Editor\RemoveVegetationStudioDefine.cs" />
-    <Compile Include="Assets\AwesomeTechnologies\VegetationStudio\Common\Editor\ScriptableObjectUtility.cs" />
-    <Compile Include="Assets\AwesomeTechnologies\VegetationStudio\Common\Editor\Utils\DecoratorEditor.cs" />
-    <Compile Include="Assets\AwesomeTechnologies\VegetationStudio\Common\Editor\VegetationStudioBaseEditor.cs" />
-    <Compile Include="Assets\AwesomeTechnologies\VegetationStudio\Common\Editor\VegetationStudioManagerEditor.cs" />
-    <Compile Include="Assets\AwesomeTechnologies\VegetationStudio\Common\Editor\WebEditorWindow.cs" />
-    <Compile Include="Assets\AwesomeTechnologies\VegetationStudio\Common\ScriptOrder\Editor\ScriptOrderManager.cs" />
-    <Compile Include="Assets\AwesomeTechnologies\VegetationStudio\External\CurveEditor\Editor\InspectorCurveEditor.cs" />
-    <Compile Include="Assets\AwesomeTechnologies\VegetationStudio\External\Gaia\Editor\GaiaExtention.cs" />
-    <Compile Include="Assets\AwesomeTechnologies\VegetationStudio\External\MapMagic\Editor\MapMagicInfiniteTerrainEditor.cs" />
-    <Compile Include="Assets\AwesomeTechnologies\VegetationStudio\External\TerraFirma\Editor\TerrafirmaExportTerrainDataEditor.cs" />
-    <Compile Include="Assets\AwesomeTechnologies\VegetationStudio\GrassSystem\Editor\WindControllerEditor.cs" />
-    <Compile Include="Assets\AwesomeTechnologies\VegetationStudio\GrassSystem\GrassPatch\Editor\GrassPatchGeneratorEditor.cs" />
-    <Compile Include="Assets\AwesomeTechnologies\VegetationStudio\GrassSystem\GrassPatch\Editor\ProceduralGrassPlaneEditor.cs" />
-    <Compile Include="Assets\AwesomeTechnologies\VegetationStudio\GrassSystem\GrassPatch\Editor\WindBakerEditor.cs" />
-    <Compile Include="Assets\AwesomeTechnologies\VegetationStudio\MeshTerrain\Editor\MeshTerrainDataEditor.cs" />
-    <Compile Include="Assets\AwesomeTechnologies\VegetationStudio\MeshTerrain\Editor\MeshTerrainEditor.cs" />
-    <Compile Include="Assets\AwesomeTechnologies\VegetationStudio\RuntimePrefabSpawner\Editor\RuntimePrefabSpawnerEditor.cs" />
-    <Compile Include="Assets\AwesomeTechnologies\VegetationStudio\TerrainSystem\Editor\TerrainSystemEditor.cs" />
-    <Compile Include="Assets\AwesomeTechnologies\VegetationStudio\Utility\Editor\DropZoneTools.cs" />
-    <Compile Include="Assets\AwesomeTechnologies\VegetationStudio\Utility\Editor\VegetationBrush.cs" />
-    <Compile Include="Assets\AwesomeTechnologies\VegetationStudio\Utility\MaskBackgroundCreator\Editor\MaskBackgroundCreatorEditor.cs" />
-    <Compile Include="Assets\AwesomeTechnologies\VegetationStudio\Utility\ObstacleMaskCreator\Editor\ObstacleMaskCreatorEditor.cs" />
-    <Compile Include="Assets\AwesomeTechnologies\VegetationStudio\Utility\SceneVegetationBaker\Editor\SceneVegetationBakerEditor.cs" />
-    <Compile Include="Assets\AwesomeTechnologies\VegetationStudio\Utility\ShadowMaskCreator\Editor\ShadowMaskCreatorEditor.cs" />
-    <Compile Include="Assets\AwesomeTechnologies\VegetationStudio\Utility\VegetationColorMaskCreator\Editor\VegetationColorMaskCreatorEditor.cs" />
-    <Compile Include="Assets\AwesomeTechnologies\VegetationStudio\VegetationSystem\Editor\VegetationPackageEditor.cs" />
-    <Compile Include="Assets\AwesomeTechnologies\VegetationStudio\VegetationSystem\Editor\VegetationPackageEditorTools.cs" />
-    <Compile Include="Assets\AwesomeTechnologies\VegetationStudio\VegetationSystem\Editor\VegetationSystemEditor.cs" />
-    <Compile Include="Assets\AwesomeTechnologies\VegetationStudio\VegetationSystem\Editor\VegetationSystemToolWindowEditor.cs" />
-    <Compile Include="Assets\AwesomeTechnologies\VegetationStudio\VegetationSystem\PersistentVegetationStorage\Editor\PersistentVegetationStorageEditor.cs" />
-    <Compile Include="Assets\AwesomeTechnologies\VegetationStudio\VegetationSystem\PersistentVegetationStorage\Editor\PersistentVegetationStoragePackageEditor.cs" />
-    <Compile Include="Assets\AwesomeTechnologies\VegetationStudio\VegetationSystem\PersistentVegetationStorage\Importer\Editor\SceneVegetationImporter.cs" />
-    <Compile Include="Assets\AwesomeTechnologies\VegetationStudio\VegetationSystem\PersistentVegetationStorage\Importer\Editor\SceneVegetationImporterSettingsEditor.cs" />
-    <Compile Include="Assets\AwesomeTechnologies\VegetationStudio\VegetationSystem\PersistentVegetationStorage\Importer\Editor\TerrainDetailImporter.cs" />
-    <Compile Include="Assets\AwesomeTechnologies\VegetationStudio\VegetationSystem\PersistentVegetationStorage\Importer\Editor\TerrainTreeImporter.cs" />
-    <Compile Include="Assets\AwesomeTechnologies\VegetationStudio\VegetationSystem\VegetationMask\Editor\VegetationBeaconEditor.cs" />
-    <Compile Include="Assets\AwesomeTechnologies\VegetationStudio\VegetationSystem\VegetationMask\Editor\VegetationItemMaskEditor.cs" />
-    <Compile Include="Assets\AwesomeTechnologies\VegetationStudio\VegetationSystem\VegetationMask\Editor\VegetationMaskAreaEditor.cs" />
-    <Compile Include="Assets\AwesomeTechnologies\VegetationStudio\VegetationSystem\VegetationMask\Editor\VegetationMaskEditor.cs" />
-    <Compile Include="Assets\AwesomeTechnologies\VegetationStudio\VegetationSystem\VegetationMask\Editor\VegetationMaskErrorEditor.cs" />
-    <Compile Include="Assets\AwesomeTechnologies\VegetationStudio\VegetationSystem\VegetationMask\Editor\VegetationMaskLineEditor.cs" />
+    <Compile Include="Assets\Minimalist Free v2.3\Editor\EditorGUILayoutExtended.cs" />
+    <Compile Include="Assets\Minimalist Free v2.3\Editor\MinimalistClipboard.cs" />
+    <Compile Include="Assets\Minimalist Free v2.3\Editor\MinimalistSkyEditor.cs" />
+    <Compile Include="Assets\Minimalist Free v2.3\Editor\MinimalistStandardEditor.cs" />
     <Reference Include="UnityEditor.StandardEvents">
       <HintPath>C:/Users/Rollie/Documents/GitHub/Simuquad-Android/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
     </Reference>
@@ -125,12 +73,6 @@
     </Reference>
     <Reference Include="Unity.PackageManagerUI.Editor">
       <HintPath>C:/Users/Rollie/Documents/GitHub/Simuquad-Android/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="Editor">
-      <HintPath>C:/Users/Rollie/Documents/GitHub/Simuquad-Android/Library/ScriptAssemblies/Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="XiaomiSupport">
-      <HintPath>C:/Users/Rollie/Documents/GitHub/Simuquad-Android/Library/ScriptAssemblies/XiaomiSupport.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
       <HintPath>C:/Users/Rollie/Documents/GitHub/Simuquad-Android/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
@@ -393,17 +335,8 @@
     <Reference Include="UnityEngine.StandardEvents">
       <HintPath>C:/Users/Rollie/AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.standardevents@1.0.13/UnityEngine.StandardEvents.dll</HintPath>
     </Reference>
-    <Reference Include="ChannelPurchase">
-      <HintPath>C:/Users/Rollie/AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.xiaomi@1.0.3/ChannelPurchase.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityStore">
-      <HintPath>C:/Users/Rollie/AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.xiaomi@1.0.3/UnityStore.dll</HintPath>
-    </Reference>
     <Reference Include="SyntaxTree.VisualStudio.Unity.Bridge">
       <HintPath>C:/Program Files (x86)/Microsoft Visual Studio Tools for Unity/15.0/Editor/SyntaxTree.VisualStudio.Unity.Bridge.dll</HintPath>
-    </Reference>
-    <Reference Include="MathLib">
-      <HintPath>C:/Users/Rollie/Documents/GitHub/Simuquad-Android/Assets/AwesomeTechnologies/VegetationStudio/Utility/Math/MathLib.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib">
       <HintPath>C:/Program Files/Unity/Editor/Data/MonoBleedingEdge/lib/mono/2.0-api/mscorlib.dll</HintPath>

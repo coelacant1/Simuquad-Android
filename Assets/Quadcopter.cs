@@ -8,14 +8,14 @@ namespace Assets
 {
     class Quadcopter
     {
-        private readonly VectorPID rotationControl = new VectorPID(0.01, 0.005, 0.009, 1.0 / 60.0);
-        private readonly VectorPID velocityControl = new VectorPID(1.0,  0.95,  0.0,   1.0 / 60.0);
+        private readonly VectorPID rotationControl = new VectorPID(1.0, 0.25, 0.09, 1.0 / 60.0);
+        private readonly VectorPID velocityControl = new VectorPID(10.0,  8.0,  0.0, 1.0 / 60.0);
         private readonly double AirDensity = 1.225;
         private readonly double DragCoefficient = 0.6;
         private readonly double Area = 0.025;
         private readonly double ArmLength = 100;//mm
         private readonly double ArmAngle = 60;//degrees
-        private readonly double Mass = 2.0;//Kilograms
+        private readonly double Mass = 0.5;//Kilograms
         private readonly double MaxThrust = 10.0;//Thrust-to-weight ratio
         private readonly bool horizon;
         private readonly double torque;
@@ -47,6 +47,7 @@ namespace Assets
         public void EstimateState(Controls controls, double DT)
         {
             this.DT = DT;
+            //this.DT = 1.0 / 60.0;
 
             controls.Thrust *= MaxThrust * Mass / 4.0;// Maximum thrust output per motor
 
@@ -99,7 +100,7 @@ namespace Assets
             BetterVector dragForce = EstimateDrag(velocity);
 
             //T * 9.81 -> Mass thrust to mass in Newtons
-            acceleration = angularPosition.RotateVector(new BetterVector(0.0, thrustSum * 9.81, 0.0)) / Mass - dragForce + gravity * Mass * 2.0;
+            acceleration = angularPosition.RotateVector(new BetterVector(0.0, thrustSum, 0.0)) / Mass - dragForce + gravity * Mass;
 
             //Debug.Log(thrustSum);
 
@@ -108,9 +109,9 @@ namespace Assets
             velocity += DT * oldAcceleration;
             velocity += DT * (acceleration - oldAcceleration) / 2.0;
 
-            velocity *= 0.999;
+            //velocity *= 0.999;
 
-            //Debug.Log(velocity);
+            Debug.Log(velocity);
 
             oldAcceleration = acceleration;
 
