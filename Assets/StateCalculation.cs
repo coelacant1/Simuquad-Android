@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Assets;
+using UnityEngine.UI;
 
 //Used to calculate the current state of the quadcopter object
 public class StateCalculation : MonoBehaviour {
@@ -10,6 +11,13 @@ public class StateCalculation : MonoBehaviour {
     public Joystick leftJoyStick;
     public Joystick rightJoyStick;
     private bool horizon = true;
+    private bool pause = false;
+    private bool wasPaused = false;
+
+    public GameObject HUD;
+    public GameObject Settings;
+    public GameObject PausedHUD;
+    public GameObject CameraFPV;
 
     Controls controls = new Controls
     {
@@ -28,23 +36,25 @@ public class StateCalculation : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
-        controls.Thrust = MathExtension.Exponential(leftJoyStick.Vertical, 1.0, 2.0) * 1.0;
-        controls.Yaw    = horizon ? controls.Yaw + MathExtension.Exponential(leftJoyStick.Horizontal, 1.0, 3.0) * 4.0 : MathExtension.Exponential(leftJoyStick.Horizontal, 1.0, 3.0)   * 5.0;
-        controls.Pitch  = horizon ? MathExtension.Exponential(rightJoyStick.Vertical, 1.0, 2.0)   * -45.0             : MathExtension.Exponential(rightJoyStick.Vertical, 1.0, 2.0)    * 5.0;
-        controls.Roll   = horizon ? MathExtension.Exponential(rightJoyStick.Horizontal, 1.0, 2.0) * -45.0             : MathExtension.Exponential(-rightJoyStick.Horizontal, 1.0, 2.0) * 5.0;
-
-        if (controls.Thrust <= 0)
+        if (!pause)
         {
-            controls.Thrust = 0;
+            controls.Thrust = MathExtension.Exponential(leftJoyStick.Vertical, 1.0, 2.0) * 1.0 + 1.0;
+            controls.Yaw = horizon ? controls.Yaw + MathExtension.Exponential(leftJoyStick.Horizontal, 1.0, 3.0) * 4.0 : MathExtension.Exponential(leftJoyStick.Horizontal, 1.0, 3.0) * 7.5;
+            controls.Pitch = horizon ? MathExtension.Exponential(rightJoyStick.Vertical, 1.0, 2.5) * -60.0 : MathExtension.Exponential(rightJoyStick.Vertical, 1.0, 2.5) * 7.5;
+            controls.Roll = horizon ? MathExtension.Exponential(rightJoyStick.Horizontal, 1.0, 2.5) * -60.0 : MathExtension.Exponential(-rightJoyStick.Horizontal, 1.0, 2.5) * 7.5;
+
+            if (controls.Thrust <= 0)
+            {
+                controls.Thrust = 0;
+            }
+
+            //Debug.Log(controls.Pitch + " " + controls.Yaw + " " + controls.Roll + " " + controls.Thrust);
+
+            quadcopter.EstimateState(controls, Time.deltaTime);//DT ~= 0.016s
+
+            rb.MovePosition(quadcopter.GetUnityPosition());
+            rb.MoveRotation(quadcopter.GetUnityQuaternion());
         }
-
-        //Debug.Log(controls.Pitch + " " + controls.Yaw + " " + controls.Roll + " " + controls.Thrust);
-
-        quadcopter.EstimateState(controls, Time.deltaTime);//DT ~= 0.016s
-        
-        rb.MovePosition(quadcopter.GetUnityPosition());
-        rb.MoveRotation(quadcopter.GetUnityQuaternion());
     }
 
     public void ResetQuadcopter()
@@ -56,15 +66,58 @@ public class StateCalculation : MonoBehaviour {
     {
         if (horizon)
         {
-            //Camera.main.transform.rotation.eulerAngles.Set(-45, 0, 0);
+            CameraFPV.transform.eulerAngles = new Vector3(-45, 0, 0);
             horizon = false;
+            GameObject.Find("Mode").GetComponentInChildren<Text>().text = "Mode: Acrobatics";
         }
         else
         {
-            //Camera.main.transform.rotation.eulerAngles.Set(0, 0, 0);
+            CameraFPV.transform.eulerAngles = new Vector3(0, 0, 0);
             horizon = true;
+            GameObject.Find("Mode").GetComponentInChildren<Text>().text = "Mode: Horizon";
         }
 
         quadcopter = new Quadcopter(horizon);
+    }
+
+    public void DisplaySettings()
+    {
+        if (pause)
+        {
+            wasPaused = true;
+        }
+        else
+        {
+            pause = true;
+        }
+
+        //Hide HUD and Pause
+        HUD.SetActive(false);
+        Settings.SetActive(true);
+    }
+
+    public void HideSettings()
+    {
+        if (!wasPaused)
+        {
+            pause = false;
+        }
+
+        HUD.SetActive(true);
+        Settings.SetActive(false);
+    }
+
+    public void Pause()
+    {
+        if (pause)
+        {
+            pause = false;
+            PausedHUD.SetActive(false);
+        }
+        else
+        {
+            pause = true;
+            PausedHUD.SetActive(true);
+        }
     }
 }
