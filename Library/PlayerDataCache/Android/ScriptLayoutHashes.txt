@@ -1,6 +1,6 @@
 Android
 PlayerPath?
-C:/Users/Rollie/Documents/GitHub/Simuquad-Android/Build Files/Simuquad_11-28.apk
+C:/Users/Rollie/Documents/GitHub/Simuquad-Android/Build Files/Simuquad_12-2.apk
 SceneListBegin?
 Assets/Scenes/World.unity
 SceneListEnd?
@@ -119,7 +119,7 @@ fc061f3ae8a876c0687e86378d4a447c UnityEngine.Networking.dll:UnityEngine.Networki
 ca79e2ead709e871e4e191416387865f Assembly-CSharp.dll:.Player2DExample
 382b8ef512fa8d6108723a01b57af65b UnityEngine.Analytics.dll:UnityEngine.Analytics.AnalyticsEventTracker
 d22c788799ee45d8676254eccf20e8b8 UnityEngine.Analytics.dll:UnityEngine.Analytics.AnalyticsTracker
-1265c8a064b18de063226b1469a70e31 Assembly-CSharp.dll:.StateCalculation
+8af261e547eac35927a6c2d582e52d4f Assembly-CSharp.dll:.StateCalculation
 d75dc834c5dec688db75a55a1724c90f UnityEngine.HoloLens.dll:UnityEngine.Audio.AudioSpatializerMicrosoft
 486cd95c82d8305219c352c06b776e1f UnityEngine.HoloLens.dll:UnityEngine.EventSystems.HoloLensInput
 e1ea12ca952c81d81a9a21fdf34446ed UnityEngine.HoloLens.dll:UnityEngine.EventSystems.HoloLensInputModule

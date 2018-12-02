@@ -15,11 +15,13 @@ public class StateCalculation : MonoBehaviour {
     private bool horizon = true;
     private bool pause = false;
     private bool wasPaused = false;
+    private bool calculate = true;
     private double DTModifier = 1.0;
 
     public GameObject HUD;
     public GameObject Settings;
     public GameObject PausedHUD;
+    public GameObject CrashedHUD;
     public Camera CameraFPV;
 
     Controls controls = new Controls
@@ -39,7 +41,7 @@ public class StateCalculation : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-        if (!pause)
+        if (!pause && calculate)
         {
             controls.Thrust = MathExtension.Exponential(leftJoyStick.Vertical, 1.0, 2.0) * 1.0 + 1.0;
             controls.Yaw = horizon ? controls.Yaw + MathExtension.Exponential(leftJoyStick.Horizontal, 1.0, 3.0) * 4.0 : MathExtension.Exponential(leftJoyStick.Horizontal, 1.0, 3.0) * 7.5;
@@ -55,14 +57,48 @@ public class StateCalculation : MonoBehaviour {
 
             quadcopter.EstimateState(controls, Time.deltaTime * DTModifier);//DT ~= 0.016s
 
+            //rb.MovePosition(quadcopter.GetUnityPosition());
+            InterpolateMovePosition();
+            rb.MoveRotation(quadcopter.GetUnityQuaternion());
+        }
+        else if (pause)
+        {
             rb.MovePosition(quadcopter.GetUnityPosition());
             rb.MoveRotation(quadcopter.GetUnityQuaternion());
         }
     }
 
+    void InterpolateMovePosition()
+    {
+        Vector3 position = rb.position;
+
+        for (int i = 0; i < 5; i++)
+        {
+            rb.MovePosition(Vector3.Lerp(position, quadcopter.GetUnityPosition(), i / 5.0f));
+        }
+
+        rb.MovePosition(quadcopter.GetUnityPosition());
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        CrashedHUD.SetActive(true);
+        //switch to unity's physics engine
+        calculate = false;
+        rb.useGravity = true;
+        rb.velocity = quadcopter.GetUnityVelocity();
+        rb.angularVelocity = quadcopter.GetUnityAngularVelocity();
+    }
+
     public void ResetQuadcopter()
     {
-        quadcopter.Reset();
+        CrashedHUD.SetActive(false);
+        quadcopter = new Quadcopter(horizon);//.Reset();
+
+        rb.useGravity = false;
+        rb.velocity = new Vector3(0, 0, 0);
+        rb.angularVelocity = new Vector3(0, 0, 0);
+        calculate = true;
     }
 
     public void SetMode()

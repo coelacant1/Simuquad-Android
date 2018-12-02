@@ -8,8 +8,8 @@ namespace Assets
 {
     class Quadcopter
     {
-        private readonly VectorPID rotationControl = new VectorPID(1.0, 0.25, 0.09, 1.0 / 60.0);
-        private readonly VectorPID velocityControl = new VectorPID(10.0,  8.0,  0.0, 1.0 / 60.0);
+        private readonly VectorPID rotationControl = new VectorPID(1.0, 0.25, 0.09, Time.deltaTime);
+        private readonly VectorPID velocityControl = new VectorPID(10.0,  8.0,  0.0, Time.deltaTime);
         private readonly double AirDensity = 1.225;
         private readonly double DragCoefficient = 0.6;
         private readonly double Area = 0.025;
@@ -21,13 +21,13 @@ namespace Assets
         private readonly double torque;
         private readonly BetterVector gravity = new BetterVector(0.0, -9.81, 0.0);
 
-        private double DT = 1.0 / 60.0;
+        private double DT = Time.deltaTime;
 
         private Outputs motorOutputs             = new Outputs(0, 0, 0, 0);
         private BetterVector acceleration        = new BetterVector(0, 0, 0);
         private BetterVector oldAcceleration     = new BetterVector(0, 0, 0);
         private BetterVector velocity            = new BetterVector(0, 0, 0);
-        private BetterVector position            = new BetterVector(0, 200, 0);
+        private BetterVector position            = new BetterVector(0, 200, 15);
         private BetterVector angularAcceleration = new BetterVector(0, 0, 0);
         private BetterVector angularVelocity     = new BetterVector(0, 0, 0);
         private BetterQuaternion angularPosition = new BetterQuaternion(1, 0, 0, 0);
@@ -100,7 +100,7 @@ namespace Assets
             BetterVector dragForce = EstimateDrag(velocity);
 
             //T * 9.81 -> Mass thrust to mass in Newtons
-            acceleration = angularPosition.RotateVector(new BetterVector(0.0, thrustSum, 0.0)) / Mass - dragForce + gravity * Mass;
+            acceleration = angularPosition.RotateVector(new BetterVector(0.0, thrustSum * 9.81, 0.0)) / Mass - dragForce + gravity * Mass * 9.81;
 
             //Debug.Log(thrustSum);
 
@@ -116,12 +116,6 @@ namespace Assets
             oldAcceleration = acceleration;
 
             return position;
-        }
-
-        public void ApplyCollision()
-        {
-            acceleration = new BetterVector(0, 0, 0);
-            velocity = new BetterVector(-velocity.X, -velocity.Y, -velocity.Z);
         }
 
         private Outputs CalculateMotorOuputsHorizon(Controls controls)
@@ -204,7 +198,7 @@ namespace Assets
 
         public Vector3 GetUnityPosition()
         {
-            position.Y = position.Y < 45.0 ? 45.0 : position.Y;
+            //position.Y = position.Y < 45.0 ? 45.0 : position.Y;//floor limit
 
             return new Vector3(
                 (float)position.X,
@@ -213,19 +207,27 @@ namespace Assets
             );
         }
 
+        public Vector3 GetUnityVelocity()
+        {
+            return new Vector3(
+                (float)velocity.X,
+                (float)velocity.Y,
+                (float)velocity.Z
+            );
+        }
+
+        public Vector3 GetUnityAngularVelocity()
+        {
+            return new Vector3(
+                (float)angularVelocity.X,
+                (float)angularVelocity.Y,
+                (float)angularVelocity.Z
+            );
+        }
+
         public Outputs GetMotorOuputs()
         {
             return motorOutputs;
-        }
-
-        public void Reset()
-        {
-            acceleration        = new BetterVector(0, 0, 0);
-            velocity            = new BetterVector(0, 0, 0);
-            position            = new BetterVector(0, 200, 0);
-            angularAcceleration = new BetterVector(0, 0, 0);
-            angularVelocity     = new BetterVector(0, 0, 0);
-            angularPosition     = new BetterQuaternion(1, 0, 0, 0);
         }
     }
 }
