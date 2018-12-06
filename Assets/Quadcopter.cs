@@ -8,18 +8,19 @@ namespace Assets
 {
     class Quadcopter
     {
-        private readonly VectorPID rotationControl = new VectorPID(1.0, 0.25, 0.09, Time.deltaTime);
-        private readonly VectorPID velocityControl = new VectorPID(10.0,  8.0,  0.0, Time.deltaTime);
         private readonly double AirDensity = 1.225;
-        private readonly double DragCoefficient = 0.6;
         private readonly double Area = 0.025;
         private readonly double ArmLength = 100;//mm
         private readonly double ArmAngle = 60;//degrees
-        private readonly double Mass = 0.5;//Kilograms
-        private readonly double MaxThrust = 10.0;//Thrust-to-weight ratio
         private readonly bool horizon;
         private readonly double torque;
-        private readonly BetterVector gravity = new BetterVector(0.0, -9.81, 0.0);
+        private double MaxThrust = 10.0;//Thrust-to-weight ratio
+        private BetterVector gravity = new BetterVector(0.0, -9.81, 0.0);
+        private VectorPID rotationControl = new VectorPID(1.0, 0.25, 0.09, Time.deltaTime);
+        private VectorPID velocityControl = new VectorPID(10.0, 8.0, 0.0, Time.deltaTime);
+        private double mass = 0.5;//Kilograms
+        private double worldScale = 1.0;
+        private double DragCoefficient = 0.6;
 
         private double DT = Time.deltaTime;
 
@@ -49,7 +50,7 @@ namespace Assets
             this.DT = DT;
             //this.DT = 1.0 / 60.0;
 
-            controls.Thrust *= MaxThrust * Mass / 4.0;// Maximum thrust output per motor
+            controls.Thrust *= MaxThrust * mass / 4.0;// Maximum thrust output per motor
 
             if (horizon)
             {
@@ -100,18 +101,18 @@ namespace Assets
             BetterVector dragForce = EstimateDrag(velocity);
 
             //T * 9.81 -> Mass thrust to mass in Newtons
-            acceleration = angularPosition.RotateVector(new BetterVector(0.0, thrustSum * 9.81, 0.0)) / Mass - dragForce + gravity * Mass * 9.81;
+            acceleration = (angularPosition.RotateVector(new BetterVector(0.0, thrustSum * 9.81, 0.0)) / mass - dragForce + gravity * mass * 9.81);
 
             //Debug.Log(thrustSum);
 
             //Verlet method
             position += DT * (velocity + DT * oldAcceleration / 2.0);
-            velocity += DT * oldAcceleration;
-            velocity += DT * (acceleration - oldAcceleration) / 2.0;
+            velocity += DT * oldAcceleration * worldScale;
+            velocity += DT * ((acceleration - oldAcceleration) / 2.0) * worldScale;
 
-            //velocity *= 0.999;
+            velocity *= 0.999;
 
-            Debug.Log(velocity);
+            //Debug.Log(velocity);
 
             oldAcceleration = acceleration;
 
@@ -228,6 +229,41 @@ namespace Assets
         public Outputs GetMotorOuputs()
         {
             return motorOutputs;
+        }
+
+        public void SetMass(double mass)
+        {
+            this.mass = mass;
+        }
+
+        public void SetWorldScale(double worldScale)
+        {
+            this.worldScale = worldScale;
+        }
+
+        public void SetDragCoefficient(double drag)
+        {
+            DragCoefficient = drag;
+        }
+
+        public void SetHorizonPids(VectorPID horizonPID)
+        {
+            rotationControl = new VectorPID(horizonPID.GetKP(), horizonPID.GetKI(), horizonPID.GetKD());
+        }
+
+        public void SetAcrobaticsPids(VectorPID acrobaticsPID)
+        {
+            velocityControl = new VectorPID(acrobaticsPID.GetKP(), acrobaticsPID.GetKI(), acrobaticsPID.GetKD());
+        }
+
+        public void SetGravity(double gravity)
+        {
+            this.gravity = new BetterVector(0.0, gravity, 0.0);
+        }
+
+        public void SetTWRatio(double twRatio)
+        {
+            MaxThrust = twRatio;
         }
     }
 }

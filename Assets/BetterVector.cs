@@ -7,6 +7,7 @@ namespace Assets
 {
     //Created by Steven Rowland
     //Provides better functionality than Unity's built in Vector class
+    [System.Serializable]
     class BetterVector
     {
         public double X { get; set; }

@@ -29,8 +29,7 @@ namespace Assets
             this.KD = KD;
             this.DT = DT;
         }
-
-
+        
         public double Calculate(double setPoint, double processVariable)
         {
             return Calculate(setPoint, processVariable, DT);
@@ -51,6 +50,21 @@ namespace Assets
             previousError = error;
 
             return p + i + d;
+        }
+
+        public double GetKP()
+        {
+            return KP;
+        }
+
+        public double GetKI()
+        {
+            return KI;
+        }
+
+        public double GetKD()
+        {
+            return KD;
         }
     }
 }

@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace Assets
 {
+    [System.Serializable]
     static class MathExtension
     {/// <summary>
      /// Constrains the output of the input value to a maximum and minimum value.

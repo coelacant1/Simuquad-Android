@@ -78,6 +78,7 @@
     <Compile Include="Assets\PID.cs" />
     <Compile Include="Assets\Quadcopter.cs" />
     <Compile Include="Assets\RotationMatrix.cs" />
+    <Compile Include="Assets\SaveData.cs" />
     <Compile Include="Assets\StateCalculation.cs" />
     <Compile Include="Assets\VectorCDS.cs" />
     <Compile Include="Assets\VectorPID.cs" />

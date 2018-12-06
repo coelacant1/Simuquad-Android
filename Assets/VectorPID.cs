@@ -57,5 +57,20 @@ namespace Assets
                 Z.Calculate(setPoint.Z, processVariable.Z, DT)
             );
         }
+
+        public BetterVector GetKP()
+        {
+            return new BetterVector(X.GetKP(), Y.GetKP(), Z.GetKP());
+        }
+
+        public BetterVector GetKI()
+        {
+            return new BetterVector(X.GetKI(), Y.GetKI(), Z.GetKI());
+        }
+
+        public BetterVector GetKD()
+        {
+            return new BetterVector(X.GetKD(), Y.GetKD(), Z.GetKD());
+        }
     }
 }
