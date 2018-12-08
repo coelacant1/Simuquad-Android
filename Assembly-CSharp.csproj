@@ -72,11 +72,13 @@
     <Compile Include="Assets\DirectionAngle.cs" />
     <Compile Include="Assets\EulerConstants.cs" />
     <Compile Include="Assets\EulerOrder.cs" />
+    <Compile Include="Assets\Gate.cs" />
     <Compile Include="Assets\MathExtension.cs" />
     <Compile Include="Assets\MotorOutputs.cs" />
     <Compile Include="Assets\Outputs.cs" />
     <Compile Include="Assets\PID.cs" />
     <Compile Include="Assets\Quadcopter.cs" />
+    <Compile Include="Assets\Race.cs" />
     <Compile Include="Assets\RotationMatrix.cs" />
     <Compile Include="Assets\SaveData.cs" />
     <Compile Include="Assets\StateCalculation.cs" />
