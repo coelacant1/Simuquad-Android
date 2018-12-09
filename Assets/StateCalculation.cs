@@ -279,30 +279,48 @@ public class StateCalculation : MonoBehaviour {
     private void ReadParameters()
     {
         horizonPID = new VectorPID(
-            new BetterVector(S2D(THorizonPitchP.text), S2D(THorizonRollP.text), S2D(THorizonYawP.text)),
-            new BetterVector(S2D(THorizonPitchI.text), S2D(THorizonRollI.text), S2D(THorizonYawI.text)),
-            new BetterVector(S2D(THorizonPitchD.text), S2D(THorizonRollD.text), S2D(THorizonYawD.text)),
+            new BetterVector(
+                MathExtension.Constrain(S2D(THorizonPitchP.text), 0, 20),
+                MathExtension.Constrain(S2D(THorizonRollP.text), 0, 5),
+                MathExtension.Constrain(S2D(THorizonYawP.text), 0, 20)),
+            new BetterVector(
+                MathExtension.Constrain(S2D(THorizonPitchI.text), 0, 20),
+                MathExtension.Constrain(S2D(THorizonRollI.text), 0, 5),
+                MathExtension.Constrain(S2D(THorizonYawI.text), 0, 20)),
+            new BetterVector(
+                MathExtension.Constrain(S2D(THorizonPitchD.text), 0, 20),
+                MathExtension.Constrain(S2D(THorizonRollD.text), 0, 5),
+                MathExtension.Constrain(S2D(THorizonYawD.text), 0, 20)),
             new BetterVector(Time.deltaTime, Time.deltaTime, Time.deltaTime)
         );
 
         acrobaticsPID = new VectorPID(
-            new BetterVector(S2D(TAcrobaticsPitchP.text), S2D(TAcrobaticsRollP.text), S2D(TAcrobaticsYawP.text)),
-            new BetterVector(S2D(TAcrobaticsPitchI.text), S2D(TAcrobaticsRollI.text), S2D(TAcrobaticsYawI.text)),
-            new BetterVector(S2D(TAcrobaticsPitchD.text), S2D(TAcrobaticsRollD.text), S2D(TAcrobaticsYawD.text)),
+            new BetterVector(
+                MathExtension.Constrain(S2D(TAcrobaticsPitchP.text), 0, 20),
+                MathExtension.Constrain(S2D(TAcrobaticsRollP.text), 0, 5),
+                MathExtension.Constrain(S2D(TAcrobaticsYawP.text), 0, 20)),
+            new BetterVector(
+                MathExtension.Constrain(S2D(TAcrobaticsPitchI.text), 0, 20),
+                MathExtension.Constrain(S2D(TAcrobaticsRollI.text), 0, 5),
+                MathExtension.Constrain(S2D(TAcrobaticsYawI.text), 0, 20)),
+            new BetterVector(
+                MathExtension.Constrain(S2D(TAcrobaticsPitchD.text), 0, 20),
+                MathExtension.Constrain(S2D(TAcrobaticsRollD.text), 0, 5),
+                MathExtension.Constrain(S2D(TAcrobaticsYawD.text), 0, 20)),
             new BetterVector(Time.deltaTime, Time.deltaTime, Time.deltaTime)
         );
 
-        mass = S2D(TMass.text);
-        gravity = S2D(TGravity.text);
-        twRatio = S2D(TTWRatio.text);
-        acroExpo = S2D(TAcroExpo.text);
-        acroRate = S2D(TAcroRate.text);
-        horizonExpo = S2D(THoriExpo.text);
-        drag = dragSlider.value;
-        worldScale = worldSlider.value;
-        cameraAngle = camSlider.value;
-        dtModifier = dTSlider.value;
-        renderDistance = renderSlider.value;
+        mass = MathExtension.Constrain(S2D(TMass.text), 0.1, 20);
+        gravity = MathExtension.Constrain(S2D(TGravity.text), -20, 20);
+        twRatio = MathExtension.Constrain(S2D(TTWRatio.text), 1, 20);
+        acroExpo = MathExtension.Constrain(S2D(TAcroExpo.text), 0.5, 5);
+        acroRate = MathExtension.Constrain(S2D(TAcroRate.text), 0.5, 20);
+        horizonExpo = MathExtension.Constrain(S2D(THoriExpo.text), 0.5, 5);
+        drag = MathExtension.Constrain(dragSlider.value, 0.2, 1.6);
+        worldScale = MathExtension.Constrain(worldSlider.value, 0.2, 5.0);
+        cameraAngle = MathExtension.Constrain(camSlider.value, 0, 90);
+        dtModifier = MathExtension.Constrain(dTSlider.value, 0.1, 10);
+        renderDistance = MathExtension.Constrain(renderSlider.value, 100, 10000);
 
         ResetQuadcopter();
     }
