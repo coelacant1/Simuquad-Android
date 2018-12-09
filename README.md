@@ -1,7 +1,7 @@
 ### Simuquad-Android
 A quadcopter simulator built in Unity made for Android.
 
-[[https://github.com/RollieRowland/Simuquad-Android/blob/master/SimScreenshot.jpg]]
+![alt text](https://github.com/RollieRowland/Simuquad-Android/blob/master/SimScreenshot.jpg)
 
 #What it can do:
 Simulate quadcopter flight characteristics realistically
