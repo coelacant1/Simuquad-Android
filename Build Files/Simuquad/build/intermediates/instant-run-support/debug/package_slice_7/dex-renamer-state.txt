@@ -1,0 +1,4 @@
+#Sat Dec 08 19:31:45 EST 2018
+base.0=C\:\\Users\\Rollie\\Documents\\GitHub\\Simuquad-Android\\Build Files\\Simuquad\\build\\intermediates\\transforms\\dexMerger\\debug\\8
+path.0=classes.dex
+renamed.0=classes.dex
